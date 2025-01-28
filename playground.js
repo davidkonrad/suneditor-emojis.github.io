@@ -1,0 +1,200 @@
+"use strict";
+
+
+const Demo = (function() {
+	const gebi = (id) => { return document.getElementById(id) }
+	const qsel = (sel) => { return document.querySelector(sel) }
+	const qall = (sel) => { return document.querySelectorAll(sel) }
+
+	let editor = undefined
+	let form = undefined	
+
+	const init = function() {
+		form = document.getElementById('form')
+		initForm()
+		initEditor()
+		updateEditor()
+	}
+
+	const getDefaults = function() {
+		const groups = ['Smileys & Emotion', 'Activities', 'Animals & Nature', 'Flags', 'Food & Drink', 'Objects', 'People & Body', 'Symbols', 'Travel & Places']
+		return {
+			groups: groups.slice(),
+			names: groups.slice(),
+			favorites: true,
+			iconSize: '1.5rem',
+			skinTone: 'neutral',
+			topmenu: {
+				search: false,
+				skinTone: false,
+				iconSize: false
+			},
+			showFallbacks: false
+		}
+	}
+
+	const initGroups = function() {
+		const cnt = qsel('div[name="groups-names"]')
+		cnt.querySelectorAll('input[type="checkbox"]').forEach(function(input) {
+			input.onclick = function() {
+				const name = this.parentElement.nextElementSibling 
+				if (!this.checked) {
+					name.setAttribute('disabled', 'disabled')
+					this.parentElement.style.color = 'rgb(170, 170, 170)'
+				} else {
+					name.removeAttribute('disabled')
+					this.parentElement.style.color = '#333'
+				}
+				updateEditor()
+			}
+		})
+		cnt.querySelectorAll('input[type="text"]').forEach(function(input) {
+			input.onfocus = function() {
+				this.select()
+			}
+		})
+	}
+
+	function DragDrop(cnt, cls) {
+		const items = cnt.querySelectorAll(cls)
+		//console.log(items)
+		const name = cnt.getAttribute('name')
+		//console.log(name)
+		//console.log(name)
+		let dragged = undefined
+		let checked = undefined
+		let allowDrop = undefined
+		for (const item of items) {
+			//item.setAttribute('data-name', cnt.getAttribute('name'))
+			//console.log(name, item)
+			//item.name = cnt.getAttribute('name')
+			item.draggable = true
+			item.ondragstart = function(e) {
+				dragged = item
+				e.dataTransfer.dropEffect = 'move'
+				e.dataTransfer.effectAllowed = 'move'
+				e.dataTransfer.setData('text/html'	, item.innerHTML)
+				checked = item.querySelector('input[type="checkbox"]').checked
+			}
+			item.ondragover = function(e) {
+				const el = document.elementFromPoint(e.clientX, e.clientY)
+				console.log(el.parentElement.parentElement.getAttribute('name'), name)
+				e.preventDefault()
+				//console.log(e.srcElement.getAttribute('data-name'))
+				//console.log(, name)
+				//const n = dragged ? dragged.getAttribute('data-name') : undefined
+				const n = el.parentElement.parentElement.getAttribute('name') //this.getAttribute('data-name')
+				console.log(n, name)
+				allowDrop = n === name
+			}
+			item.ondrop = function(e) {
+				//console.dir(this)
+				e.preventDefault()
+				//console.log(name)
+				//console.log(name, e.target.parentElement.parentElement.getAttribute('name'))
+				//const cntName = e.srcElement.parentElement.parentElement.getAttribute('name')
+				//console.log(cntName, item.cntName)
+				//console.log('x', dragged.getAttribute('data-name'), e.srcElement.getAttribute('data-name'), item.getAttribute('data-name'), cntName, name)
+				if (dragged !== item && allowDrop) {
+					dragged.innerHTML = item.innerHTML
+					item.innerHTML = e.dataTransfer.getData('text/html')
+					item.querySelector('input[type="checkbox"]').checked = checked
+				}
+			}
+			item.ondragenter = function(e) {
+				//if (e.dataTransfer.cntName !== item.
+				//console.log(e.dataTransfer)
+				item.classList.add('active')
+			}
+			item.ondragleave = function() {
+				item.classList.remove('active')
+			}
+			item.ondragend = function() {
+				for (const item of items) { 
+					item.classList.remove('active')
+				}
+				initGroups()
+			}
+		}(cnt, name, dragged, items, checked, allowDrop)
+	}
+
+
+	const initForm = function() {
+		const cnt = qsel('div[name="groups-names"]')
+		const groups = ['Smileys & Emotion', 'Activities', 'Animals & Nature', 'Flags', 'Food & Drink', 'Objects', 'People & Body', 'Symbols', 'Travel & Places']
+		for (const group of groups) {
+			const html = `
+				<div class="item-sortable bb" style="display:table-row;">
+					<label class="fieldset-item" style="display: table-cell; ">
+						<input type="checkbox" name="${group}" checked>${group}</label>
+					</label>
+					<input class="fieldset-item" type="text" name="${group}" value="${group}" style="display:table-cell;" >
+				</div>`
+			cnt.insertAdjacentHTML('beforeend', html)
+		}
+		initGroups()
+		//initDragDrop(cnt)
+		//initDragDrop(qsel('div[name="topmenu"]'))
+		new DragDrop(cnt, '.bb')
+		new DragDrop(qsel('div[name="topmenu"]'), '.aa')
+	}
+
+	const updateOptions = function(options) {
+		let s = ''
+		if (options) {
+			const obj = { emojis: options }
+			s = JSON.stringify(obj, null, '  ')
+			s = s.replace(/"([^"]+)":/g, '$1:') //https://stackoverflow.com/a/11233515/1407478
+			//s = s.substr(1, s.length - 2)
+		}
+		gebi('options').innerText = s.trimLeft()
+	}
+
+	const updateEditor = function() {
+		const options = {
+			groups: [],
+			names: []
+		}
+		qsel('div[name="groups-names"]').querySelectorAll('input[type="checkbox"]').forEach(function(input) {
+			if (input.checked) {
+				options.groups.push(input.name)
+				options.names.push(input.parentElement.nextElementSibling.value)
+			}
+		})
+		console.log(options)
+		updateOptions(options)
+	}
+
+	const initEditor = function(opt) {
+		opt = opt || {}
+		opt.useTag = 'span'
+		const options = {
+			mode: 'classic',
+			width: '100%',
+			height: 'auto',
+			minHeight : '40vh',
+			plugins: [emojisPlugin],
+			buttonList: [
+				['font', 'fontSize', 'formatBlock'], ['emojis'],
+				['bold', 'underline', 'italic', 'strike', 'removeFormat'],
+				['fontColor', 'hiliteColor'], 
+			],
+			defaultStyle: "font-size:1.5rem;"
+		}
+		options.emojis = opt 
+		if (editor) editor.destroy()
+		editor = SUNEDITOR.create('editor', options)
+		editor.setContents('<p>Lorem ipsum</p>')
+		qsel('.sun-editor-editable').focus()
+	}
+
+	return {
+		init
+	}
+
+})()
+
+window.addEventListener("DOMContentLoaded", function() {
+	Demo.init()
+})	
+

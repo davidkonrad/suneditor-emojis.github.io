@@ -6,74 +6,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
 <link href="https://cdn.jsdelivr.net/npm/suneditor@latest/dist/css/suneditor.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/suneditor@latest/dist/suneditor.min.js"></script>
-<script src="demo.js"></script>
+<script src="playground.js"></script>
+<link href="playground.css" rel="stylesheet" type="text/css" >
 <script src="../suneditor-emojis/dev/suneditor-emojis-loader.js"></script>
 <script src="../suneditor-emojis/dev/suneditor-emojis.js"></script>
 <link href="../suneditor-emojis/dev/suneditor-emojis.css" rel="stylesheet" type="text/css" >
 <style>
-body {
-	display: flex;
-	min-height: 100vh;
-	font-family: helvetica;
-	color: #333;
-	margin-left: 2rem;
-	margin-top: 1rem;
-}
-aside {
-	float: left;
-	padding: 1rem;
-	padding-top: 0;
-}
-main {
-	float: left;
-	margin-left: 2rem;
-	width: 40%;
-}
-h1 {
-	margin-top: 0;
-	font-size: 2.5rem;
-}
-form {
-	display: flex;
-	flex-direction: column;
-}
-fieldset {
-	display: flex;
-	flex-direction: row;
-	border-radius: 4px;
-	border-color: #ebebeb;
-	margin-bottom: .5rem;
-	padding: 1rem;
-	padding-top: .5rem;
-	padding-bottom: .5rem;
-	background: #eee;
-}
-legend {
-	font-size: small;
-	font-weight: bold;
-	padding-left: .3rem;
-	padding-right: .3rem;
-	background: #fff;
-}
-label.fieldset-item {
-	padding: .1rem;
-	margin-bottom: .2rem;
-	margin-left: .1rem;
-	margin-right: .1rem;
-	user-select: none;
-}
-input.fieldset-item {
-	padding: .1rem;
-	padding-top: .18rem;
-	margin-bottom: .2rem;
-	margin-left: .5rem;
-	margin-right: .2rem;
-	user-select: none;
-}
-div.columns {
-	display: flex;
-	flex-direction:column;
-}
 </style>
 </head>
 <body>
@@ -81,42 +19,22 @@ div.columns {
 	<form>
 		<fieldset>
 			<legend>groups & names</legend>
-				<div class="columns" name="groups-names" style="display:table;" title="dragdrop to change order"></div>
-<!--
-			<div class="columns" name="groups">
-				<label class="fieldset-item item-sortable"><input type="checkbox" name="Smileys & Emotion" checked>Smileys &amp; Emotion</label>
-				<label class="fieldset-item item-sortable"><input type="checkbox" name="Activities" checked>Activities</label>
-				<label class="fieldset-item item-sortable"><input type="checkbox" name="Animals & Nature" checked>Animals &amp; Nature</label>
-				<label class="fieldset-item item-sortable"><input type="checkbox" name="Flags" checked>Flags</label>
-				<label class="fieldset-item item-sortable"><input type="checkbox" name="Food & Drink" checked>Food &amp; Drink</label>
-				<label class="fieldset-item item-sortable"><input type="checkbox" name="Objects" checked>Objects</label>
-				<label class="fieldset-item item-sortable"><input type="checkbox" name="People & Body" checked>People &amp; Body</label>
-				<label class="fieldset-item item-sortable"><input type="checkbox" name="Symbols" checked>Symbols</label>
-				<label class="fieldset-item item-sortable"><input type="checkbox" name="Travel & Places" checked>Travel &amp; Places</label>
-			</div>
-			<div class="columns" name="names">
-				<input class="fieldset-item" type="text" name="Smileys & Emotion" value="Smileys & Emotion">
-				<input class="fieldset-item" type="text" name="Activities" value="Activities">
-				<input class="fieldset-item" type="text" name="Animals & Nature" value="Animals & Nature">
-				<input class="fieldset-item" type="text" name="Flags" value="Flags">
-				<input class="fieldset-item" type="text" name="Food & Drink" value="Food & Drink">
-				<input class="fieldset-item" type="text" name="Objects" value="Objects">
-				<input class="fieldset-item" type="text" name="People & Body" value="People & Body">
-				<input class="fieldset-item" type="text" name="Symbols" value="Symbols">
-				<input class="fieldset-item" type="text" name="Travel & Places" value="Travel & Places">
-			</div>
--->
+			<div class="columns" name="groups-names" style="display:table;" title="dragdrop to change order"></div>
 		</fieldset>
-
 		<fieldset>
 			<legend>topmenu</legend>
 			<div class="columns" name="topmenu">
-				<label class="fieldset-item"><input type="checkbox" name="search" checked>search</label>
-				<label class="fieldset-item"><input type="checkbox" name="iconSize" checked>iconSize</label>
-				<label class="fieldset-item"><input type="checkbox" name="skinTone" checked>skinTone</label>
+				<div class="item-sortable aa">
+					<label class="fieldset-item"><input type="checkbox" name="search" checked>search</label>
+				</div>
+				<div class="item-sortable aa">
+					<label class="fieldset-item"><input type="checkbox" name="iconSize" checked>iconSize</label>
+				</div>
+				<div class="item-sortable aa">
+					<label class="fieldset-item"><input type="checkbox" name="skinTone" checked>skinTone</label>
+				</div>
 			<div>
 		</fieldset>
-
 		<fieldset>
 			<legend>skinTone</legend>
 			<div class="columns" name="skinTone">
@@ -128,7 +46,6 @@ div.columns {
 				<label class="fieldset-item"><input type="radio" name="skinTone" value="dark">dark</label>
 			</div>
 		</fieldset>
-
 		<fieldset>
 			<legend>misc</legend>
 			<div class="columns" name="misc">
@@ -136,12 +53,14 @@ div.columns {
 				<label class="fieldset-item"><input type="checkbox" name="showFallbacks">showFallbacks</label>
 			<div>
 		</fieldset>
-
 	</form>
 </aside>
 
 <main>
 <h1>suneditor-emojis playground</h1>
+<p>Change options to the left, click update to refresh the editor. 
+<button style="float:right" id="btn-update">Update</button>
+</p>
 <textarea id="editor"></textarea>	
 <h4>options</h4>
 <pre id="options"></pre>
