@@ -4,26 +4,56 @@
 <meta charset="utf-8">
 <link rel="shortcut icon" href="#">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
-<link href="https://cdn.jsdelivr.net/npm/suneditor@latest/dist/css/suneditor.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/suneditor@latest/dist/css/suneditor.min.css">
 <script src="https://cdn.jsdelivr.net/npm/suneditor@latest/dist/suneditor.min.js"></script>
 <script src="playground.js"></script>
 <link href="playground.css" rel="stylesheet" type="text/css" >
 <script src="../suneditor-emojis/dev/suneditor-emojis-loader.js"></script>
 <script src="../suneditor-emojis/dev/suneditor-emojis.js"></script>
 <link href="../suneditor-emojis/dev/suneditor-emojis.css" rel="stylesheet" type="text/css" >
-<style>
-</style>
 </head>
 <body>
+<h1>suneditor-emojis playground</h1>
+<p>
+Change options to the left, click update to refresh the editor. 
+</p>
 <aside>
-	<form>
+	<details id="option-groups-names" open>
+		<summary>groups and names</summary>
+		<div style="display:table;" title="drag-drop to change the order">
+		</div>
+	</details>
+
+	<details id="option-topmenu" open>
+		<summary>topmenu</summary>
+		<div style="display:flex;flex-direction:row;" title="drag-drop to change the order">
+			<div class="item-sortable">
+				<label class="fieldset-item" title="Show search" style="cursor:pointer;"><input type="checkbox" name="search" checked>search</label>
+			</div>
+			<div class="item-sortable">
+				<label class="fieldset-item" title="Show iconSize" style="cursor:pointer;"><input type="checkbox" name="iconSize" checked>iconSize</label>
+			</div>
+			<div class="item-sortable">
+				<label class="fieldset-item" title="Show skinTone" style="cursor:pointer;"><input type="checkbox" name="skinTone" checked>skinTone</label>
+			</div>
+		</div>
+	</details>
+
+	<details id="option-settings" open>
+		<summary>settings</summary>
+		<div style="display:flex;flex-direction:column;">
+			
+		</div>
+	</details>
+
+<!--
 		<fieldset>
 			<legend>groups & names</legend>
 			<div class="columns" name="groups-names" style="display:table;" title="dragdrop to change order"></div>
 		</fieldset>
 		<fieldset>
 			<legend>topmenu</legend>
-			<div class="columns" name="topmenu">
+			<div Xclass="columns" name="topmenu" style="display:flex;flex-direction:row;">
 				<div class="item-sortable aa">
 					<label class="fieldset-item"><input type="checkbox" name="search" checked>search</label>
 				</div>
@@ -33,19 +63,20 @@
 				<div class="item-sortable aa">
 					<label class="fieldset-item"><input type="checkbox" name="skinTone" checked>skinTone</label>
 				</div>
-			<div>
+			</div>
 		</fieldset>
 		<fieldset>
 			<legend>skinTone</legend>
-			<div class="columns" name="skinTone">
-				<label class="fieldset-item"><input type="radio" name="skinTone" value="neutral" checked>neutral</label>
-				<label class="fieldset-item"><input type="radio" name="skinTone" value="light">light</label>
-				<label class="fieldset-item"><input type="radio" name="skinTone" value="mediumLight">mediumLight</label>
-				<label class="fieldset-item"><input type="radio" name="skinTone" value="medium">medium</label>
-				<label class="fieldset-item"><input type="radio" name="skinTone" value="mediumDark">mediumDark</label>
-				<label class="fieldset-item"><input type="radio" name="skinTone" value="dark">dark</label>
+			<div XXclass="columns" name="skinTone" style="display:flex;flex-direction:column;flex-basis:100%;flex:2;">
+				<label class="fieldset-item xx" Xstyle="flex: 50%;"><input type="radio" name="skinTone" value="neutral" checked>neutral</label>
+				<label class="fieldset-item xx" Xstyle="flex: 50%;"><input type="radio" name="skinTone" value="light">light</label>
+				<label class="fieldset-item xx" Xstyle="flex: 50%;"><input type="radio" name="skinTone" value="mediumLight">mediumLight</label>
+				<label class="fieldset-item xx" Xstyle="flex: 50%;"><input type="radio" name="skinTone" value="medium">medium</label>
+				<label class="fieldset-item xx" Xstyle="flex: 50%;"><input type="radio" name="skinTone" value="mediumDark">mediumDark</label>
+				<label class="fieldset-item xx" Xstyle="flex: 50%;"><input type="radio" name="skinTone" value="dark">dark</label>
 			</div>
 		</fieldset>
+-->
 		<fieldset>
 			<legend>misc</legend>
 			<div class="columns" name="misc">
@@ -53,18 +84,16 @@
 				<label class="fieldset-item"><input type="checkbox" name="showFallbacks">showFallbacks</label>
 			<div>
 		</fieldset>
-	</form>
 </aside>
 
 <main>
-<h1>suneditor-emojis playground</h1>
-<p>Change options to the left, click update to refresh the editor. 
-<button style="float:right" id="btn-update">Update</button>
-</p>
-<textarea id="editor"></textarea>	
-<h4>options</h4>
-<pre id="options"></pre>
-<main>
+<textarea id="editor" tabindex="-1"></textarea>	
+<br>
+<details open>
+	<summary>Options</summary>
+	<pre id="options"></pre>
+</details>
+</main>
 
 </body>
 </html>

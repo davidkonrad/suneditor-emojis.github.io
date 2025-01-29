@@ -1,18 +1,14 @@
 "use strict";
 
 
-const Demo = (function() {
+const Playground = (function() {
 	const gebi = (id) => { return document.getElementById(id) }
 	const qsel = (sel) => { return document.querySelector(sel) }
 	const qall = (sel) => { return document.querySelectorAll(sel) }
-
 	let editor = undefined
-	let form = undefined	
-
+	
 	const init = function() {
-		form = document.getElementById('form')
 		initForm()
-		initEditor()
 		updateEditor()
 	}
 
@@ -33,6 +29,71 @@ const Demo = (function() {
 		}
 	}
 
+	const storage = function(o) {
+		const name = (s) => 'suneditor-emoji_' + s
+		if (typeof o === 'string') {
+			return localStorage.getItem(name(o))
+		}
+		if (typeof o === 'object') {
+			const key = Object.keys(o)[0]
+			if (!o[key]) return localStorage.removeItem(name(key)) 
+			const val = typeof o[key] === 'string' ? o[key] : JSON.stringify(o[key])
+			return localStorage.setItem(name(key), val)
+		}
+	}
+
+	function DragDrop(cnt, cls) {
+		const items = cnt.querySelectorAll(cls)
+		const name = cnt.getAttribute('name')
+		let dragged = undefined
+		let allowDrop = undefined
+		for (const item of items) {
+			item.draggable = true
+			item.ondragstart = function(e) {
+				dragged = this
+				e.dataTransfer.dropEffect = 'move'
+				e.dataTransfer.effectAllowed = 'move'
+				e.dataTransfer.setData('text/html', item.innerHTML)
+
+				e.dataTransfer.setData('checked', item.querySelector('input[type="checkbox"]').checked)
+				e.dataTransfer.setData('value', item.querySelector('input[type="text"]').value)
+
+				//checked = item.querySelector('input[type="checkbox"]').checked
+			}
+			item.ondragover = function(e) {
+				const el = document.elementFromPoint(e.clientX, e.clientY)
+				e.preventDefault()
+				const n = el.parentElement.parentElement.getAttribute('name') //this.getAttribute('data-name')
+				allowDrop = n === name
+			}
+			item.ondrop = function(e) {
+				e.preventDefault()
+				if (dragged !== item && allowDrop) {
+					dragged.innerHTML = item.innerHTML
+					item.innerHTML = e.dataTransfer.getData('text/html')
+				
+					item.querySelector('input[type="checkbox"]').checked = e.dataTransfer.getData('checked')
+					item.querySelector('input[type="text"]').value = e.dataTransfer.getData('value')
+
+					//item.querySelector('input[type="checkbox"]').checked = checked
+				}
+			}
+			item.ondragenter = function(e) {
+				item.classList.add('active')
+			}
+			item.ondragleave = function() {
+				item.classList.remove('active')
+			}
+			item.ondragend = function() {
+				for (const item of items) { 
+					item.classList.remove('active')
+				}
+				initGroups()
+			}
+		} //(cnt, name, dragged, items, checked, allowDrop)
+	}
+
+/*
 	const initGroups = function() {
 		const cnt = qsel('div[name="groups-names"]')
 		cnt.querySelectorAll('input[type="checkbox"]').forEach(function(input) {
@@ -50,78 +111,63 @@ const Demo = (function() {
 		})
 		cnt.querySelectorAll('input[type="text"]').forEach(function(input) {
 			input.onfocus = function() {
-				this.select()
+				this.oldValue = this.value
+				this.parentElement.draggable = false
+			}
+			input.onblur = function() {
+				this.parentElement.draggable = true
+				if (this.oldValue !== this.value) updateEditor()
+			}
+		})
+	}
+*/
+	const initGroups = function() {
+		const cnt = qsel('#option-groups-names div')
+		cnt.querySelectorAll('input[type="checkbox"]').forEach(function(input) {
+			input.onclick = function() {
+				const name = this.parentElement.nextElementSibling 
+				if (!this.checked) {
+					name.setAttribute('disabled', 'disabled')
+					this.parentElement.style.color = 'rgb(170, 170, 170)'
+				} else {
+					name.removeAttribute('disabled')
+					this.parentElement.style.color = '#333'
+				}
+				updateEditor()
+			}
+		})
+		cnt.querySelectorAll('input[type="text"]').forEach(function(input) {
+			input.onfocus = function() {
+				this.oldValue = this.value
+				this.parentElement.draggable = false
+			}
+			input.onblur = function() {
+				this.parentElement.draggable = true
+				if (this.oldValue !== this.value) updateEditor()
 			}
 		})
 	}
 
-	function DragDrop(cnt, cls) {
-		const items = cnt.querySelectorAll(cls)
-		//console.log(items)
-		const name = cnt.getAttribute('name')
-		//console.log(name)
-		//console.log(name)
-		let dragged = undefined
-		let checked = undefined
-		let allowDrop = undefined
-		for (const item of items) {
-			//item.setAttribute('data-name', cnt.getAttribute('name'))
-			//console.log(name, item)
-			//item.name = cnt.getAttribute('name')
-			item.draggable = true
-			item.ondragstart = function(e) {
-				dragged = item
-				e.dataTransfer.dropEffect = 'move'
-				e.dataTransfer.effectAllowed = 'move'
-				e.dataTransfer.setData('text/html'	, item.innerHTML)
-				checked = item.querySelector('input[type="checkbox"]').checked
-			}
-			item.ondragover = function(e) {
-				const el = document.elementFromPoint(e.clientX, e.clientY)
-				console.log(el.parentElement.parentElement.getAttribute('name'), name)
-				e.preventDefault()
-				//console.log(e.srcElement.getAttribute('data-name'))
-				//console.log(, name)
-				//const n = dragged ? dragged.getAttribute('data-name') : undefined
-				const n = el.parentElement.parentElement.getAttribute('name') //this.getAttribute('data-name')
-				console.log(n, name)
-				allowDrop = n === name
-			}
-			item.ondrop = function(e) {
-				//console.dir(this)
-				e.preventDefault()
-				//console.log(name)
-				//console.log(name, e.target.parentElement.parentElement.getAttribute('name'))
-				//const cntName = e.srcElement.parentElement.parentElement.getAttribute('name')
-				//console.log(cntName, item.cntName)
-				//console.log('x', dragged.getAttribute('data-name'), e.srcElement.getAttribute('data-name'), item.getAttribute('data-name'), cntName, name)
-				if (dragged !== item && allowDrop) {
-					dragged.innerHTML = item.innerHTML
-					item.innerHTML = e.dataTransfer.getData('text/html')
-					item.querySelector('input[type="checkbox"]').checked = checked
-				}
-			}
-			item.ondragenter = function(e) {
-				//if (e.dataTransfer.cntName !== item.
-				//console.log(e.dataTransfer)
-				item.classList.add('active')
-			}
-			item.ondragleave = function() {
-				item.classList.remove('active')
-			}
-			item.ondragend = function() {
-				for (const item of items) { 
-					item.classList.remove('active')
-				}
-				initGroups()
-			}
-		}(cnt, name, dragged, items, checked, allowDrop)
-	}
-
-
 	const initForm = function() {
-		const cnt = qsel('div[name="groups-names"]')
 		const groups = ['Smileys & Emotion', 'Activities', 'Animals & Nature', 'Flags', 'Food & Drink', 'Objects', 'People & Body', 'Symbols', 'Travel & Places']
+
+		const div = gebi('option-groups-names').querySelector('div')
+		for (const group of groups) {
+			const html = `
+				<div class="item-sortable" style="display:table-row;" title="${group}">
+					<label class="fieldset-item" style="display:table-cell;cursor:pointer">
+						<input type="checkbox" name="${group}" checked>${group}</label>
+					</label>
+					<input class="fieldset-item" type="text" name="${group}" value="${group}" style="display:table-cell;" spellcheck="false">
+				</div>`
+			div.insertAdjacentHTML('beforeend', html)
+		}
+		new DragDrop(div, '.item-sortable')
+
+		//--------------------------------------------
+/*
+		const cnt = qsel('div[name="groups-names"]')
+		//const groups = ['Smileys & Emotion', 'Activities', 'Animals & Nature', 'Flags', 'Food & Drink', 'Objects', 'People & Body', 'Symbols', 'Travel & Places']
 		for (const group of groups) {
 			const html = `
 				<div class="item-sortable bb" style="display:table-row;">
@@ -132,11 +178,25 @@ const Demo = (function() {
 				</div>`
 			cnt.insertAdjacentHTML('beforeend', html)
 		}
+*/
+		//groups
 		initGroups()
-		//initDragDrop(cnt)
-		//initDragDrop(qsel('div[name="topmenu"]'))
-		new DragDrop(cnt, '.bb')
-		new DragDrop(qsel('div[name="topmenu"]'), '.aa')
+		//new DragDrop(cnt, '.bb')
+
+		//topmenu
+		qsel('#option-topmenu div').querySelectorAll('input[type="checkbox"]').forEach(function(input) {
+			input.onclick = function() {
+				updateEditor()
+			}
+		})
+		new DragDrop(qsel('#option-topmenu div'), '.item-sortable')
+
+		qall('aside details').forEach(function(d) {
+			d.ontoggle = function() {
+				storage({ [this.id]: !this.open ? 'closed' : undefined })
+			}
+			if (storage(d.id)) d.open = false
+		})
 	}
 
 	const updateOptions = function(options) {
@@ -153,16 +213,24 @@ const Demo = (function() {
 	const updateEditor = function() {
 		const options = {
 			groups: [],
-			names: []
+			names: [],
+			topmenu: {},
 		}
-		qsel('div[name="groups-names"]').querySelectorAll('input[type="checkbox"]').forEach(function(input) {
+		qsel('#option-groups-names div').querySelectorAll('input[type="checkbox"]').forEach(function(input) {
 			if (input.checked) {
 				options.groups.push(input.name)
 				options.names.push(input.parentElement.nextElementSibling.value)
 			}
 		})
-		console.log(options)
+		qsel('#option-topmenu div').querySelectorAll('input[type="checkbox"]').forEach(function(input) {
+			if (input.checked) {
+				options.topmenu[input.name] = true
+			}
+		})
+		//console.log(options)
 		updateOptions(options)
+		//return options
+		initEditor(options)
 	}
 
 	const initEditor = function(opt) {
@@ -185,6 +253,7 @@ const Demo = (function() {
 		if (editor) editor.destroy()
 		editor = SUNEDITOR.create('editor', options)
 		editor.setContents('<p>Lorem ipsum</p>')
+		qsel('.sun-editor-editable').tabIndex = -1
 		qsel('.sun-editor-editable').focus()
 	}
 
@@ -195,6 +264,6 @@ const Demo = (function() {
 })()
 
 window.addEventListener("DOMContentLoaded", function() {
-	Demo.init()
+	Playground.init()
 })	
 
