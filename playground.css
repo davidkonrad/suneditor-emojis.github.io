@@ -23,8 +23,7 @@ aside {
 }
 main {
 	float: left;
-	margin-left: 1rem;
-	XXmargin-top: .7rem;
+	margin-left: .5rem;
 	width: 40%;
 }
 h1 {
@@ -137,5 +136,15 @@ details div {
 	border: 2px solid #e4eaef;
 }
 
+input[type="text"],
+input[type="radio"] {
+	border: 1px solid #dadada;
+}
+
+select {
+	border: 1px solid #dadada;
+	background: #fff;
+	padding: 3px;
+}
 
 

@@ -20,13 +20,13 @@ Change options to the left, click update to refresh the editor.
 <aside>
 	<details id="option-groups-names" open>
 		<summary>groups and names</summary>
-		<div style="display:table;" title="drag-drop to change the order">
+		<div name="groups-names" style="display:table;" title="drag-drop to change the order">
 		</div>
 	</details>
 
 	<details id="option-topmenu" open>
 		<summary>topmenu</summary>
-		<div style="display:flex;flex-direction:row;" title="drag-drop to change the order">
+		<div name="topmenu" style="display:flex;flex-direction:row;" title="drag-drop to change the order">
 			<div class="item-sortable">
 				<label class="fieldset-item" title="Show search" style="cursor:pointer;"><input type="checkbox" name="search" checked>search</label>
 			</div>
@@ -37,62 +37,77 @@ Change options to the left, click update to refresh the editor.
 				<label class="fieldset-item" title="Show skinTone" style="cursor:pointer;"><input type="checkbox" name="skinTone" checked>skinTone</label>
 			</div>
 		</div>
-	</details>
-
-	<details id="option-settings" open>
-		<summary>settings</summary>
-		<div style="display:flex;flex-direction:column;">
-			
+		<div id="option-recent">
+			<label title="Show recent used emojis">
+				<input type="checkbox" checked>recent
+			</label>
 		</div>
 	</details>
 
-<!--
-		<fieldset>
-			<legend>groups & names</legend>
-			<div class="columns" name="groups-names" style="display:table;" title="dragdrop to change order"></div>
-		</fieldset>
-		<fieldset>
-			<legend>topmenu</legend>
-			<div Xclass="columns" name="topmenu" style="display:flex;flex-direction:row;">
-				<div class="item-sortable aa">
-					<label class="fieldset-item"><input type="checkbox" name="search" checked>search</label>
-				</div>
-				<div class="item-sortable aa">
-					<label class="fieldset-item"><input type="checkbox" name="iconSize" checked>iconSize</label>
-				</div>
-				<div class="item-sortable aa">
-					<label class="fieldset-item"><input type="checkbox" name="skinTone" checked>skinTone</label>
-				</div>
+	<details id="option-icons" open>
+		<summary>icons</summary>
+		<div>
+			<div id="option-iconSize" style="margin-bottom:.3rem;">
+				<label class="fieldset-item" title="iconSize" style="cursor:pointer;">
+					iconSize
+					<select id="select-iconsize"></select>
+					<span id="iconsize-current" style="color:gray;">default</span>
+				</label>
 			</div>
-		</fieldset>
-		<fieldset>
-			<legend>skinTone</legend>
-			<div XXclass="columns" name="skinTone" style="display:flex;flex-direction:column;flex-basis:100%;flex:2;">
-				<label class="fieldset-item xx" Xstyle="flex: 50%;"><input type="radio" name="skinTone" value="neutral" checked>neutral</label>
-				<label class="fieldset-item xx" Xstyle="flex: 50%;"><input type="radio" name="skinTone" value="light">light</label>
-				<label class="fieldset-item xx" Xstyle="flex: 50%;"><input type="radio" name="skinTone" value="mediumLight">mediumLight</label>
-				<label class="fieldset-item xx" Xstyle="flex: 50%;"><input type="radio" name="skinTone" value="medium">medium</label>
-				<label class="fieldset-item xx" Xstyle="flex: 50%;"><input type="radio" name="skinTone" value="mediumDark">mediumDark</label>
-				<label class="fieldset-item xx" Xstyle="flex: 50%;"><input type="radio" name="skinTone" value="dark">dark</label>
+			<div id="option-skinTone">
+				<label title="skinTone neutral">
+					<input type="radio" value="neutral" name="skinTone" checked>👍</input>
+				</label>
+				<label title="dark">
+					<input type="radio" value="dark" name="skinTone">👍🏿</input>
+				</label>
+				<label title="skinTone medium dark">
+					<input type="radio" value="mediumDark" name="skinTone">👍🏾</input>
+				</label>
+				<label title="skinTone medium" >
+					<input type="radio" value="medium" name="skinTone">👍🏽</input>
+				</label>
+				<label title="skinTone medium light">
+					<input type="radio" value="mediumLight" name="skinTone">👍🏼</input>
+				</label>
+				<label title="skinTone light">
+					<input type="radio" value="light" name="skinTone">👍🏻</input>
+				</label>
 			</div>
-		</fieldset>
--->
-		<fieldset>
-			<legend>misc</legend>
-			<div class="columns" name="misc">
-				<label class="fieldset-item"><input type="checkbox" name="favorites" checked>favorites</label>
-				<label class="fieldset-item"><input type="checkbox" name="showFallbacks">showFallbacks</label>
-			<div>
-		</fieldset>
+		</div>
+	</details>
+
+	<details id="option-misc" open>
+		<summary>misc</summary>
+		<div>
+			<div id="option-showFallbacks">
+				<label title="Show fallback emojis">
+					<input type="checkbox">showFallbacks</input>
+				</label>
+			</div>
+			<div id="option-tagName">
+				tagName
+				<select>
+					<option value="">none</option>
+					<option value="span" selected>span</option>
+					<option value="div">div</option>
+				</select>
+			</div>
+		</div>
+	</details>
+	<p id="option-settings" style="text-align:center">
+		<label title="Remember the settings next time you visit the page">
+			<input type="checkbox" checked>Save settings locally</input>
+		</label>
+	</p>		
 </aside>
 
 <main>
-<textarea id="editor" tabindex="-1"></textarea>	
-<br>
-<details open>
-	<summary>Options</summary>
-	<pre id="options"></pre>
-</details>
+	<textarea id="editor" tabindex="-1"></textarea><br>
+	<details open>
+		<summary>Options</summary>
+		<pre id="options"></pre>
+	</details>
 </main>
 
 </body>
